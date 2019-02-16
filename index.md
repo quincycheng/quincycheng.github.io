@@ -1,6 +1,6 @@
 # Live Demo for Conjur OSS
-
-Full list: [Quincy Cheng on Katacoda](https://katacoda.com/quincycheng)
+ - Full list: [Katacoda.com/QuincyCheng](https://katacoda.com/quincycheng)
+ - Pilot Page for Conjur Staging; [here](/pilot)
 
 ## Deployment
  - [Conjur Open Source One-Liner Installation](https://www.katacoda.com/quincycheng/scenarios/conjur-oss-1liner)
@@ -36,7 +36,7 @@ Full list: [Quincy Cheng on Katacoda](https://katacoda.com/quincycheng)
 
 4. [Securing containers](https://youtu.be/GmAxXKqlvzk)
 
-## Azure VSTS
+## Microsoft Azure 
 
 1. [Azure VSTS](https://youtu.be/UYQEtuz24qs)
 
