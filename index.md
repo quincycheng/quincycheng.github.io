@@ -1,6 +1,6 @@
 # Live Demo for Conjur OSS
- - Full list: [Katacoda.com/QuincyCheng](https://katacoda.com/quincycheng)
- - Pilot Page for Conjur Staging; [here](/pilot)
+ - [Full list](https://katacoda.com/quincycheng)
+ - [Pilot Page for Conjur Staging](/pilot)
 
 ## Deployment
  - [Conjur Open Source One-Liner Installation](https://www.katacoda.com/quincycheng/scenarios/conjur-oss-1liner)
