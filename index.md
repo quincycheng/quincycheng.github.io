@@ -1,8 +1,7 @@
 # Hello, I am Quincy Cheng
 
-Welcome to my Github Page.   This is where I keep my stuffs for sharing.
-Been a DevSecOps guy for a while & produced quite a number of materials.   Check them out below:
-
+Welcome to my Github Page.  
+Been a DevSecOps guy for a while & prepared some materials for work & for fun.   Check it out:
 ## Live Demo for Conjur OSS
 
 Full list: [Quincy Cheng on Katacoda](https://katacoda.com/quincycheng)
@@ -51,16 +50,16 @@ Full list: [Quincy Cheng on Katacoda](https://katacoda.com/quincycheng)
 ### Conjur CI/CD Demo
 
 This demo consists of 2 pipelines that are exactly the same, except one is insecure (with embedded secrets) and the other one is secured by Conjur.  
- - repo: https://github.com/quincycheng/cicd
- - demo video: https://youtu.be/8mUijkxvi-4
+ - repo: [https://github.com/quincycheng/cicd](https://github.com/quincycheng/cicd)
+ - demo video: [https://youtu.be/8mUijkxvi-4](https://youtu.be/8mUijkxvi-4)
 
 ### IBM UrbanCode Deploy plugin
 
 It’s one of the 16 partner plugins, among 200+ plugins for UCD
-url: https://developer.ibm.com/urbancode/plugin/cyberark/
+url: [https://developer.ibm.com/urbancode/plugin/cyberark/](https://developer.ibm.com/urbancode/plugin/cyberark)
 
 ## Presentation
 
 ### PyCon Hong Kong (for Python Developers)
- - Prezi: https://prezi.com/view/ZGX5VtYXiYfYuCog8PSO/
- - YouTube: https://youtu.be/8jgzNFZ7MVo
+ - Prezi: [https://prezi.com/view/ZGX5VtYXiYfYuCog8PSO/](https://prezi.com/view/ZGX5VtYXiYfYuCog8PSO/)
+ - YouTube: [https://youtu.be/8jgzNFZ7MVo](https://youtu.be/8jgzNFZ7MVo)
