@@ -33,16 +33,34 @@ Full list: [Quincy Cheng on Katacoda](https://katacoda.com/quincycheng)
 
 ### Ansible End-to-end Demo
 
-1. Securing human privilege access 
-[![Secure Privilege Access (static servers)](http://img.youtube.com/vi/1VX-4nsnPOI/0.jpg)](https://www.youtube.com/watch?v=1VX-4nsnPOI&feature=youtu.be&hd=1 "Secure Privilege Access (static servers)")
+1. [Securing human privilege access](https://youtu.be/1VX-4nsnPOI)
 
-2. Securing automatic credential retrieval
-[![Automatic Secure Credential Retrieval (static servers)](http://img.youtube.com/vi/nHv_hqAmyYY/0.jpg)](https://www.youtube.com/watch?v=nHv_hqAmyYY&feature=youtu.be&hd=1 "Secure Privilege Access (static servers)")
+2. [Securing automatic credential retrieval](https://youtu.be/nHv_hqAmyYY)
 
-3. Securing newly created accounts
-[![Securing newly created accounts](http://img.youtube.com/vi/qgyi-T0Ab3U/0.jpg)](https://www.youtube.com/watch?v=qgyi-T0Ab3U&feature=youtu.be&hd=1 "Secure Privilege Access (static servers)")
+3. [Securing newly created accounts](https://youtu.be/qgyi-T0Ab3U)
 
-4. Securing containers 
-[![Secure Privilege Access (static servers)](http://img.youtube.com/vi/GmAxXKqlvzk/0.jpg)](https://www.youtube.com/watch?v=GmAxXKqlvzk&feature=youtu.be&hd=1 "Secure Privilege Access (static servers)")
+4. [Securing containers](https://youtu.be/GmAxXKqlvzk)
+
+### Azure VSTS
+
+1. [Azure VSTS](https://youtu.be/UYQEtuz24qs)
 
 
+## Repo
+
+### Conjur CI/CD Demo
+
+This demo consists of 2 pipelines that are exactly the same, except one is insecure (with embedded secrets) and the other one is secured by Conjur.  
+ - repo: https://github.com/quincycheng/cicd
+ - demo video: https://youtu.be/8mUijkxvi-4
+
+### IBM UrbanCode Deploy plugin
+
+It’s one of the 16 partner plugins, among 200+ plugins for UCD
+url: https://developer.ibm.com/urbancode/plugin/cyberark/
+
+## Presentation
+
+### PyCon Hong Kong (for Python Developers)
+ - Prezi: https://prezi.com/view/ZGX5VtYXiYfYuCog8PSO/
+ - YouTube: https://youtu.be/8jgzNFZ7MVo
