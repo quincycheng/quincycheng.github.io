@@ -1,4 +1,5 @@
-a#terminal-inline-powerby img {
+a#terminal-inline-powerby > img {
     display: none;
     visibility: hidden;
 }
+
