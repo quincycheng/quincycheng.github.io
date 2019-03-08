@@ -1,3 +1,18 @@
+#terminal-inline-powerby  {
+    display: none;
+    visibility: hidden;
+}
+
+#inline-poweredby {
+    display: none;
+    visibility: hidden;
+}
+
+#course-inline-poweredby {
+    display: none;
+    visibility: hidden;
+}
+
 a#terminal-inline-powerby  {
     display: none;
     visibility: hidden;
