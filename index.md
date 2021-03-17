@@ -1,3 +1,4 @@
+# Conjur
 ## Sample Pipeline
 - SecOps pipeline using CEM, Conjur, Jenkins, Slack (WIP) https://github.com/quincycheng/cem-jenkins-slack-conjur
 - CICD pipeline using GitLab, Jenkins, Sonarqube, Artifactory, Ansible & Conjur  https://github.com/quincycheng/cicd
@@ -39,7 +40,6 @@
 - Securing Java app on Docker Swarm using Conjur & Summon: https://katacoda.com/quincycheng/scenarios/swarm-conjur-summon
 - Terraform Provider for Conjur & Summon: https://katacoda.com/quincycheng/scenarios/terraform-provider-conjur
 
-
 ## Conjur-OpenShift Lab
 - Self-Paced training  https://training.cyberark.com/content/advanced-aam-dap-openshift 
   - Lab 1: OpenShift Apps with embedded Secrets
@@ -53,14 +53,14 @@
 - Offline version lab guide: https://github.com/quincycheng/DAP-OpenShift-Lab-2020
 
 
-## PAS
+# PAS
 
-### CEM
+## CEM
 - Setting up CEM Demo using Ansible https://github.com/quincycheng/cem-demo-ansible
 - Setting up CEM demo using AWS CDK https://github.com/quincycheng/cem-aws-demo-01
 
-### CPM
+## CPM
 - Push credentials by CPM as  non-unicode config files https://github.com/quincycheng/sjis-ini-file-demo
 
-### PSM
+## PSM
 - AWS STS on Chrome PSM plugin https://github.com/quincycheng/aws-sts-chrome-cyberark-psm-plugin
