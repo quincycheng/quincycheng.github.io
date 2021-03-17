@@ -43,13 +43,13 @@
 ## Conjur-OpenShift Lab
 - Self-Paced training  https://training.cyberark.com/content/advanced-aam-dap-openshift 
   - Lab 1: OpenShift Apps with embedded Secrets
-	 - Lab 2: OpenShift Apps with Kubernetes Secrets
-	 - Lab 3: Deployment of DAP follower on OpenShift manually
-	 - Lab 4: Deployment of DAP follower on OpenShift using seed fetcher
-	 - Lab 5: Secret retrieval with init container
-	 - Lab 6: Secret retrieval with side car container
-	 - Lab 7: Secret retrieval with Secretless Broker
-	 - Lab 8: Application Identities
+  - Lab 2: OpenShift Apps with Kubernetes Secrets
+  - Lab 3: Deployment of DAP follower on OpenShift manually
+  - Lab 4: Deployment of DAP follower on OpenShift using seed fetcher
+  - Lab 5: Secret retrieval with init container
+  - Lab 6: Secret retrieval with side car container
+  - Lab 7: Secret retrieval with Secretless Broker
+  - Lab 8: Application Identities
 - Offline version lab guide: https://github.com/quincycheng/DAP-OpenShift-Lab-2020
 
 
