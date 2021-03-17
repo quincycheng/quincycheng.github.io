@@ -1,6 +1,6 @@
 # Conjur
 ## Sample Pipeline
-- SecOps pipeline using CEM, Conjur, Jenkins, Slack (WIP) https://github.com/quincycheng/cem-jenkins-slack-conjur
+- SecOps pipeline using CEM, Conjur, Jenkins, Slack & AWS Lambda (WIP) https://github.com/quincycheng/cem-jenkins-slack-conjur
 - CICD pipeline using GitLab, Jenkins, Sonarqube, Artifactory, Ansible & Conjur  https://github.com/quincycheng/cicd
 
 ## Integration Plugin
