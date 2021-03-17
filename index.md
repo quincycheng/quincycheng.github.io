@@ -54,10 +54,13 @@
 
 
 ## PAS
+
 ### CEM
-	- Setting up CEM Demo using Ansible https://github.com/quincycheng/cem-demo-ansible
-	- Setting up CEM demo using AWS CDK https://github.com/quincycheng/cem-aws-demo-01
-	### CPM
-	- Push credentials by CPM as  non-unicode config files https://github.com/quincycheng/sjis-ini-file-demo
-	### PSM
-	- AWS STS on Chrome PSM plugin https://github.com/quincycheng/aws-sts-chrome-cyberark-psm-plugin
+- Setting up CEM Demo using Ansible https://github.com/quincycheng/cem-demo-ansible
+- Setting up CEM demo using AWS CDK https://github.com/quincycheng/cem-aws-demo-01
+
+### CPM
+- Push credentials by CPM as  non-unicode config files https://github.com/quincycheng/sjis-ini-file-demo
+
+### PSM
+- AWS STS on Chrome PSM plugin https://github.com/quincycheng/aws-sts-chrome-cyberark-psm-plugin
