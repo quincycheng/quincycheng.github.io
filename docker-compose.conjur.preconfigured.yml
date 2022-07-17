@@ -1,7 +1,7 @@
 version: '3'
 services:
   database:
-    image: postgres:10.16
+    image: quincycheng/conjur-db:20220717
     container_name: postgres_database
     environment:
       POSTGRES_HOST_AUTH_METHOD: trust
@@ -9,7 +9,7 @@ services:
       - 8432:5432
 
   conjur:
-    image: cyberark/conjur
+    image: quincycheng/conjur-server:20220717
     container_name: conjur_server
     command: server
     environment:
