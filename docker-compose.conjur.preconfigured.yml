@@ -2,7 +2,7 @@ version: '3'
 services:
   database:
     image: quincycheng/conjur-db:20220717
-    container_name: postgres_database
+    container_name: conjur_db
     environment:
       POSTGRES_HOST_AUTH_METHOD: trust
     ports:
@@ -14,13 +14,10 @@ services:
     command: server
     environment:
       DATABASE_URL: postgres://postgres@database/postgres
-      PGDATA: /opt/postgres
-#      CONJUR_DATA_KEY:
-#      CONJUR_AUTHENTICATORS:
+      CONJUR_DATA_KEY: $CONJUR_DATA_KEY
+      CONJUR_AUTHENTICATORS:
     depends_on:
     - database
     restart: on-failure
     ports:
       - 8080:80
-    env_file:
-      - conjur_creds
