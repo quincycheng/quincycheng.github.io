@@ -66,7 +66,7 @@
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
-<body class="bg-slate-200 sm:bg-slate-300 h-screen w-screen flex flex-col items-center justify-center sm:p-4 overflow-hidden selection:bg-[#2A5EE8] selection:text-white">
+<body class="bg-slate-200 sm:bg-slate-300 h-[100dvh] w-screen flex flex-col items-center justify-center sm:p-4 overflow-hidden selection:bg-[#2A5EE8] selection:text-white">
 
     <!-- Main Mobile Container -->
     <div class="w-full h-full sm:max-w-md sm:h-[85vh] sm:rounded-[2rem] shadow-2xl overflow-hidden flex flex-col bg-slate-50 border-0 sm:border border-slate-400 relative">
@@ -95,7 +95,7 @@
         </div>
 
         <!-- User Input Area -->
-        <div id="controls-area" class="p-3 bg-white border-t border-slate-200 z-10 pb-safe pb-4">
+        <div id="controls-area" class="p-3 bg-white border-t border-slate-200 z-10 pb-[max(1rem,env(safe-area-inset-bottom))]">
             
             <!-- Text/Email Input Form -->
             <form id="input-form" class="flex gap-2">
