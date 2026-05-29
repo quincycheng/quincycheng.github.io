@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Idira Identity Security Landscape</title>
+    
+    <!-- Tailwind CSS for rapid styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for standard icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* Message Entry Animation */
+        .message-enter {
+            animation: slideUpFade 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(15px);
+        }
+        @keyframes slideUpFade {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Bot Typing Indicator Animation */
+        .typing-dot {
+            animation: typingBounce 1.4s infinite ease-in-out both;
+            background-color: #2A5EE8;
+        }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        
+        @keyframes typingBounce {
+            0%, 80%, 100% { transform: scale(0); opacity: 0.3; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+        
+        /* Chat Bubble Styles */
+        .bot-bubble {
+            background: white;
+            color: #334155;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        /* Idira Signature Blue Gradient */
+        .user-bubble {
+            background: linear-gradient(135deg, #2A5EE8, #1E4BB8);
+            color: white;
+            border-bottom-right-radius: 4px;
+            box-shadow: 0 4px 12px rgba(42, 94, 232, 0.2);
+        }
+
+        /* Option Buttons */
+        .btn-option {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .btn-option:active {
+            transform: scale(0.98);
+        }
+        
+        /* Hide scrollbars for a cleaner app-like feel */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-slate-200 sm:bg-slate-300 h-screen w-screen flex flex-col items-center justify-center sm:p-4 overflow-hidden selection:bg-[#2A5EE8] selection:text-white">
+
+    <!-- Main Mobile Container -->
+    <div class="w-full h-full sm:max-w-md sm:h-[85vh] sm:rounded-[2rem] shadow-2xl overflow-hidden flex flex-col bg-slate-50 border-0 sm:border border-slate-400 relative">
+        
+        <!-- App Header -->
+        <div class="bg-white p-3 sm:p-4 flex items-center justify-between border-b border-slate-200 shadow-sm z-10">
+            <div class="flex items-center gap-3">
+                <div class="flex-shrink-0">
+                    <img src="https://www.paloaltonetworks.com/etc/clientlibs/clean/imgs/idira-logo-dark.svg" alt="Idira Logo" class="h-5 sm:h-7 w-auto">
+                </div>
+                <div class="flex flex-col">
+                    <h1 class="font-bold text-slate-900 leading-tight text-xs sm:text-sm tracking-wide">Idira Identity Security Landscape</h1>
+                    <p class="text-[10px] sm:text-[11px] text-[#2A5EE8] font-medium flex items-center gap-1 uppercase tracking-wider mt-0.5">
+                        <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span> connected
+                    </p>
+                </div>
+            </div>
+            <div class="text-slate-400 text-sm hidden sm:block">
+                <i class="fa-solid fa-circle-info cursor-pointer hover:text-[#2A5EE8] transition-colors" title="Idira Identity Security PR Campaign"></i>
+            </div>
+        </div>
+        
+        <!-- Chat Area -->
+        <div id="chat-window" class="flex-1 p-4 overflow-y-auto no-scrollbar flex flex-col gap-5 relative pb-6">
+            <!-- Messages will be injected here -->
+        </div>
+
+        <!-- User Input Area -->
+        <div id="controls-area" class="p-3 bg-white border-t border-slate-200 z-10 pb-safe pb-4">
+            
+            <!-- Text/Email Input Form -->
+            <form id="input-form" class="flex gap-2">
+                <input type="text" id="user-input" class="flex-1 border border-slate-300 rounded-full px-5 py-3 text-sm focus:outline-none focus:border-[#2A5EE8] focus:ring-2 focus:ring-blue-100 transition-all bg-slate-50" placeholder="Type your message..." autocomplete="off">
+                <button type="submit" id="send-btn" class="bg-[#2A5EE8] text-white rounded-full w-12 h-12 flex items-center justify-center hover:bg-[#1E4BB8] transition-colors flex-shrink-0 shadow-md disabled:opacity-50">
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // ⚠️ ADMIN CONFIGURATION & SECRETS ⚠️
+        // ==========================================
+        
+        // 1. The 25 Questions from NotebookLM
+        let questions = [
+            { question: "According to the 2026 report, what is the average ratio of machine identities to human identities in modern organizations?", options: ["45:1", "79:1", "250:1", "109:1"], answer: "109:1" },
+            { question: "Which subset of identities is identified as the fastest-growing population within the machine-to-human ratio?", options: ["Hardware tokens", "AI agents", "Service accounts", "Public TLS certificates"], answer: "AI agents" },
+            { question: "What percentage of organizations reported experiencing at least one successful identity-related breach in the last 12 months?", options: ["83%", "76%", "90%", "50%"], answer: "90%" },
+            { question: "What is the 'fragmentation tax' in terms of time added to incident response for identity-related breaches?", options: ["72 minutes", "48 hours", "5 hours", "12 hours"], answer: "12 hours" },
+            { question: "In the context of incident investigations, Unit 42 found that 87% of major cyber incidents required evidence from how many distinct sources?", options: ["Two or more sources", "Only 1 source", "At least 10 sources", "Exactly 5 sources"], answer: "Two or more sources" },
+            { question: "What is the disconnect between C-suite perception and practitioner reality regarding the effectiveness of enforcing least privilege?", options: ["Leadership is more pessimistic than the practitioners doing the work.", "Practitioners believe they are 90% effective, while leadership sees only 10% effectiveness.", "54% of C-suite believe they are completely effective, while 61% of practitioners disagree.", "Both groups agree that least privilege is impossible to enforce in 2026."], answer: "54% of C-suite believe they are completely effective, while 61% of practitioners disagree." },
+            { question: "How do most organizations still primarily define a 'privileged identity' today?", options: ["Any AI agent with access to core logic", "Only IT admins with the highest levels of access", "Any service account with a valid certificate", "Every human identity in the workforce"], answer: "Only IT admins with the highest levels of access" },
+            { question: "What percentage of the human workforce has direct access to organizational data?", options: ["42%", "15%", "96%", "100%"], answer: "42%" },
+            { question: "What term describes the AI-driven tactic where attackers sew together synthetic profiles using data from social media and corporate directories?", options: ["Identity Stitching", "Shadow IT", "Token Theft", "Credential Stuffing"], answer: "Identity Stitching" },
+            { question: "The upcoming mandate for public TLS certificates will reduce their maximum lifetime to how many days?", options: ["47 days", "200 days", "398 days", "90 days"], answer: "47 days" },
+            { question: "What is 'Schrödinger's Breach' in the context of modern data security?", options: ["A breach that only exists when an auditor discovers it.", "A vulnerability that disappears when a patch is attempted.", "The quantum superposition where data is stolen now but cannot be decrypted until a future date.", "An incident where both the attacker and defender believe they have control of the system."], answer: "The quantum superposition where data is stolen now but cannot be decrypted until a future date." },
+            { question: "What is the estimated financial impact of certificate-related failures for an organization managing 1,000 certificates?", options: ["$272,088", "$50,000", "$1,000,000", "$125,500"], answer: "$272,088" },
+            { question: "Which identity security model focuses on eliminating 'standing access' by granting privileges only when needed and revoking them immediately after?", options: ["Role-Based Access Control (RBAC)", "Multifactor Authentication (MFA)", "Zero Standing Privilege (ZSP)", "Single Sign-On (SSO)"], answer: "Zero Standing Privilege (ZSP)" },
+            { question: "According to the report, what is the 'HNDL' strategy?", options: ["Harvest Now, Decrypt Later", "Hidden Network Deployment Logic", "Heuristic Node Detection Link", "High-Network Data Logging"], answer: "Harvest Now, Decrypt Later" },
+            { question: "What percentage of organizations currently lack full automation for certificate renewal and monitoring?", options: ["71%", "98%", "43%", "28%"], answer: "71%" },
+            { question: "Which frontier AI model is specifically cited as being able to surface vulnerabilities and mobilize exploit chains faster than defenders can patch?", options: ["Gemini Ultra", "GPT-4o", "Claude Mythos Preview", "Llama 3"], answer: "Claude Mythos Preview" },
+            { question: "In the 2026 landscape, what is identified as the top identity-related concern for security leaders?", options: ["Machine identity sprawl", "AI-enabled identity threats", "Deepfakes and synthetic identities", "Phishing and credential theft"], answer: "AI-enabled identity threats" },
+            { question: "What is the primary factor that influenced identity security investments for 98% of organizations over the last 12 months?", options: ["Cyber insurance requirements or incentives", "The transition to a four-day work week", "Employee demand for better UX", "The desire to reduce the number of passwords"], answer: "Cyber insurance requirements or incentives" },
+            { question: "What happens to the operational workload of an organization managing 1,000 certificates when the 47-day mandate takes effect?", options: ["It increases from 4,000 hours to 48,000 hours.", "It decreases because certificates expire too fast for hackers to use.", "It shifts entirely to the end users to manage.", "It remains stable due to cloud efficiencies."], answer: "It increases from 4,000 hours to 48,000 hours." },
+            { question: "Which percentage of organizations agree that AI agents should operate under the principles of \"least privilege\"?", options: ["40%", "55%", "100%", "90%"], answer: "90%" },
+            { question: "Why does a single human login now represent a much greater risk than in previous years?", options: ["Humans have become worse at creating passwords.", "Hackers have given up on targeting machines entirely.", "A single login sits at the center of massive downstream machine activity and integrations.", "Most logins are now shared among multiple employees."], answer: "A single login sits at the center of massive downstream machine activity and integrations." },
+            { question: "What is the 'Species Shift' referred to in the report's first chapter?", options: ["The evolution of hackers from lone actors to nation-states.", "The movement of data from on-premises servers to cloud-native 'species'.", "The transition from physical passwords to biometric species identification.", "The fact that humans are no longer the dominant species on corporate networks."], answer: "The fact that humans are no longer the dominant species on corporate networks." },
+            { question: "Which identity security control is least likely to be applied to Generative AI agents today?", options: ["SSO integration", "Behavioral monitoring", "Credential revocation", "Basic authentication"], answer: "Credential revocation" },
+            { question: "Palo Alto Networks introduced which platform to specifically address the needs of the human and agentic workforce?", options: ["Idira", "Cortex XDR", "Unit 42", "Prisma Access"], answer: "Idira" },
+            { question: "What percentage of organizations reported they are NOT yet prepared to defend against quantum-enabled threats?", options: ["64%", "86%", "14%", "36%"], answer: "64%" }
+        ];
+
+        // ==========================================
+        // DYNAMIC AI RESPONSES ENGINE
+        // ==========================================
+        const getRandom = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+        const botReplies = {
+            greetings: [
+                "👋 Hello! Welcome to the **Idira Identity Security Landscape** interactive experience.",
+                "👋 Hi there! Ready to explore the latest insights from the <a href='https://www.paloaltonetworks.com/idira/identity-security-landscape-report' target='_blank' class='text-[#2A5EE8] underline font-medium hover:text-[#1E4BB8]'>2026 Identity Security Landscape report</a>?",
+                "👋 Greetings! I am the Idira AI Assistant. Welcome to our PR insights quiz.",
+                "👋 Welcome! Let's test your knowledge on the rapidly shifting identity security landscape.",
+                "👋 Hello! Step into the world of Palo Alto Networks with this interactive security quiz."
+            ],
+            askName: [
+                "Before we dive into the data, what is your name?",
+                "First things first, what should I call you?",
+                "To get started properly, could you share your name with me?",
+                "Who do I have the pleasure of speaking with today?",
+                "I'm excited to begin! What's your name?"
+            ],
+            askEmail: (name) => [
+                `Nice to meet you, **${name}**! To track your score securely, please enter your professional email address.`,
+                `Great to have you here, **${name}**! Please provide your work email to secure your entry.`,
+                `Hello **${name}**! I just need your professional email address to ensure one entry per person.`,
+                `Pleasure meeting you, **${name}**. Could you drop your work email below to register for the quiz?`,
+                `Awesome, **${name}**. Let's link your results to your professional identity. What is your email?`
+            ],
+            invalidEmail: [
+                "Hmm, that doesn't look like a valid email format. Please try again.",
+                "Oops! That email structure seems a bit off. Could you double-check it?",
+                "I couldn't validate that email. Make sure it includes an '@' symbol and a valid domain.",
+                "That doesn't seem to be a standard email address. Care to re-enter?",
+                "Please provide a properly formatted business email address to continue."
+            ],
+            duplicateEmail: [
+                "It looks like this email has already taken the quiz. Each email can only be used once!",
+                "Ah, you've already conquered the quiz with this email! We only allow one entry per person.",
+                "Our records show this email has already participated. Thanks for your interest in Idira!",
+                "Whoops! That email is already registered in our system. Only one attempt is allowed.",
+                "You've already played! To keep things fair for the campaign, we limit this to one entry per email."
+            ],
+            quizStart: (name) => [
+                `Thanks, ${name}! Let's begin. You have **2 attempts** per question.\n\nGood luck! 🚀`,
+                `All set, ${name}! We're diving in. Remember, you get **2 tries** for each security question.\n\nHere we go! 🚀`,
+                `Perfect, ${name}. Let's test that industry knowledge. You have **2 attempts** per question. Ready? 🛡️`,
+                `Email confirmed! Let's get started, ${name}. You get **2 chances** to answer each question correctly. 🧠`,
+                `Awesome. The assessment starts now, ${name}. **2 attempts** per question. Show us what you know! 💡`
+            ],
+            correctFirst: [
+                "Correct! Well done. 🎉",
+                "Spot on! Excellent answer. 🎯",
+                "Absolutely right! 👏",
+                "Nailed it on the first try! ✅",
+                "That's exactly right! 🚀"
+            ],
+            correctSecond: [
+                "Correct on the second try! Good job. 👏",
+                "You got it this time! ✅",
+                "Nice recovery! That is correct. 🎯",
+                "There you go! Spot on. 🎉",
+                "Second time is the charm! Well done. 🚀"
+            ],
+            wrongFirst: [
+                "Not quite right! You have one more attempt. Give it another shot.",
+                "Close, but no cigar. Try again!",
+                "Incorrect this time. Take another calculated guess!",
+                "That's a miss. You have one attempt remaining!",
+                "Not exactly. Look at the remaining options and try once more."
+            ],
+            quizEnd: (name) => [
+                `That's a wrap, ${name}! Thank you for participating in the Idira Identity Security quiz.`,
+                `And we're done! Fantastic effort, ${name}. Thanks for taking the Idira assessment.`,
+                `You've reached the end, ${name}! We appreciate you engaging with Palo Alto Networks today.`,
+                `Quiz complete! Thank you for your time, ${name}. Let's review how you did.`,
+                `That concludes our questions, ${name}! Thanks for exploring the modern identity security landscape with me.`
+            ],
+            questionIntro: (current, total) => [
+                `**Question ${current} of ${total}:**\n\n`,
+                `**Moving on to Question ${current}/${total}:**\n\n`,
+                `**Here is Question ${current} out of ${total}:**\n\n`,
+                `**Let's look at Question ${current} of ${total}:**\n\n`,
+                `**Question ${current} of ${total} coming up:**\n\n`
+            ],
+            securityInsights: [
+                "Understanding this core concept helps organizations fortify their defenses against modern, identity-based breaches.",
+                "This insight highlights why legacy access controls are rapidly failing against autonomous and AI-driven threats.",
+                "Grasping this metric is essential for security leaders looking to prioritize their Zero Trust architecture.",
+                "This dynamic proves that securing non-human identities is no longer optional for maintaining a hardened perimeter.",
+                "Recognizing this trend is the first step toward implementing proactive, intent-based identity security models."
+            ]
+        };
+
+        // ==========================================
+        // APP STATE & LOGIC
+        // ==========================================
+        
+        const state = {
+            step: 'greeting', 
+            name: '',
+            email: '',
+            currentQuestion: 0,
+            attempts: 0,
+            score: 0
+        };
+
+        const chatWindow = document.getElementById('chat-window');
+        const inputForm = document.getElementById('input-form');
+        const userInput = document.getElementById('user-input');
+
+        window.onload = () => {
+            // Randomly select 15 questions from the pool
+            questions = questions.sort(() => 0.5 - Math.random()).slice(0, 15);
+
+            inputForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                handleUserInput(userInput.value);
+            });
+            
+            showTypingIndicator();
+            setTimeout(() => {
+                hideTypingIndicator();
+                addBotMessage(getRandom(botReplies.greetings));
+                
+                showTypingIndicator();
+                setTimeout(() => {
+                    hideTypingIndicator();
+                    addBotMessage(getRandom(botReplies.askName));
+                    userInput.focus();
+                }, 1500);
+            }, 1000);
+        };
+
+        function handleUserInput(value) {
+            const text = value.trim();
+            if (!text) return;
+            
+            addUserMessage(text);
+            userInput.value = '';
+            
+            if (state.step === 'greeting') {
+                state.name = text;
+                state.step = 'email';
+                
+                showTypingIndicator();
+                setTimeout(() => {
+                    hideTypingIndicator();
+                    addBotMessage(getRandom(botReplies.askEmail(state.name)));
+                    userInput.type = 'email';
+                    userInput.placeholder = "name@company.com";
+                    userInput.focus();
+                }, 1000);
+                
+            } else if (state.step === 'email') {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(text)) {
+                    showTypingIndicator();
+                    setTimeout(() => {
+                        hideTypingIndicator();
+                        addBotMessage(getRandom(botReplies.invalidEmail));
+                    }, 800);
+                    return;
+                }
+                
+                if (localStorage.getItem(`idira_quiz_${text.toLowerCase()}`)) {
+                    showTypingIndicator();
+                    setTimeout(() => {
+                        hideTypingIndicator();
+                        addBotMessage(getRandom(botReplies.duplicateEmail));
+                    }, 1000);
+                    return;
+                }
+
+                state.email = text.toLowerCase();
+                state.step = 'quiz';
+                
+                document.getElementById('controls-area').classList.add('hidden');
+                
+                showTypingIndicator();
+                setTimeout(() => {
+                    hideTypingIndicator();
+                    addBotMessage(getRandom(botReplies.quizStart(state.name)));
+                    
+                    setTimeout(() => askQuestion(), 1500);
+                }, 1000);
+            }
+        }
+
+        function askQuestion() {
+            const q = questions[state.currentQuestion];
+            state.attempts = 0;
+            
+            showTypingIndicator();
+            setTimeout(() => {
+                hideTypingIndicator();
+                const intro = getRandom(botReplies.questionIntro(state.currentQuestion + 1, questions.length));
+                addBotMessage(`${intro}${q.question}`);
+                showOptions(q.options);
+            }, 1000);
+        }
+
+        function showOptions(optionsArray) {
+            const existingOpts = document.getElementById('current-options');
+            if (existingOpts) existingOpts.remove();
+
+            const optionsDiv = document.createElement('div');
+            optionsDiv.id = 'current-options';
+            optionsDiv.className = 'flex flex-col gap-2 w-full mt-1 mb-4 pl-11 pr-4'; 
+            
+            optionsArray.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'btn-option w-full text-left p-3.5 rounded-xl border border-slate-200 bg-white hover:bg-blue-50 hover:border-[#2A5EE8] text-slate-700 text-[14px] shadow-sm flex items-center gap-3 message-enter transition-all group';
+                btn.style.animationDelay = `${index * 0.1}s`;
+                
+                const q = questions[state.currentQuestion];
+                const originalIndex = q.options.indexOf(opt);
+                const label = String.fromCharCode(65 + (originalIndex !== -1 ? originalIndex : index));
+                
+                btn.innerHTML = `
+                    <span class="flex-shrink-0 w-6 h-6 rounded-full bg-slate-100 text-slate-500 border border-slate-200 flex items-center justify-center font-bold text-xs group-hover:bg-[#2A5EE8] group-hover:text-white group-hover:border-[#2A5EE8] transition-colors">${label}</span> 
+                    <span class="leading-snug">${opt}</span>
+                `;
+                
+                btn.onclick = () => {
+                    optionsDiv.remove(); 
+                    handleOptionSelect(opt);
+                };
+                optionsDiv.appendChild(btn);
+            });
+            chatWindow.appendChild(optionsDiv);
+            scrollToBottom();
+        }
+
+        function handleOptionSelect(optionText) {
+            addUserMessage(optionText);
+            const q = questions[state.currentQuestion];
+            
+            showTypingIndicator();
+            
+            setTimeout(() => {
+                hideTypingIndicator();
+                
+                if (optionText === q.answer) {
+                    state.score++;
+                    addBotMessage(getRandom(state.attempts === 0 ? botReplies.correctFirst : botReplies.correctSecond));
+                    setTimeout(nextQuestion, 1500);
+                } else {
+                    state.attempts++;
+                    if (state.attempts === 1) {
+                        addBotMessage(getRandom(botReplies.wrongFirst));
+                        const remainingOptions = q.options.filter(opt => opt !== optionText);
+                        setTimeout(() => showOptions(remainingOptions), 800);
+                    } else {
+                        addBotMessage(`Incorrect again. The correct answer is:\n**${q.answer}**`);
+                        provideInsight();
+                    }
+                }
+            }, 1000);
+        }
+
+        function provideInsight() {
+            showTypingIndicator();
+
+            setTimeout(() => {
+                hideTypingIndicator();
+                addBotMessage("🤖 **Idira AI Insights:**\n" + getRandom(botReplies.securityInsights));
+                setTimeout(nextQuestion, 4000);
+            }, 1500);
+        }
+
+        function nextQuestion() {
+            state.currentQuestion++;
+            if (state.currentQuestion < questions.length) {
+                askQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        function finishQuiz() {
+            showTypingIndicator();
+            setTimeout(() => {
+                hideTypingIndicator();
+                addBotMessage(getRandom(botReplies.quizEnd(state.name)));
+                
+                localStorage.setItem(`idira_quiz_${state.email}`, JSON.stringify({ score: state.score, date: new Date().toISOString() }));
+                saveToGoogleForms(state.name, state.email, state.score);
+
+                setTimeout(showSummaryCard, 1000);
+            }, 1500);
+        }
+
+        function showSummaryCard() {
+            const percentage = Math.round((state.score / questions.length) * 100);
+            
+            // Using PANW colors: High score gets dark navy, lower score gets the alert blue
+            let colorClass = percentage >= 75 ? 'text-slate-800' : 'text-[#2A5EE8]';
+            let bgClass = percentage >= 75 ? 'bg-slate-800' : 'bg-[#2A5EE8]';
+            let feedback = percentage >= 75 
+                ? "Excellent work! You have a strong grasp of the identity security landscape." 
+                : "Great effort! Be sure to read the full <a href='https://www.paloaltonetworks.com/idira/identity-security-landscape-report' target='_blank' class='text-[#2A5EE8] hover:underline font-medium'>2026 Identity Security Landscape report</a> to dive deeper into these insights.";
+
+            const div = document.createElement('div');
+            div.className = 'w-full flex justify-center message-enter mt-2 mb-4';
+            div.innerHTML = `
+                <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-xl text-center flex flex-col items-center gap-3 w-[90%] relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1.5 ${bgClass}"></div>
+                    <div class="w-20 h-20 rounded-full border-[6px] border-slate-50 flex items-center justify-center text-2xl font-black ${colorClass} shadow-[0_0_15px_rgba(0,0,0,0.08)] mb-1">
+                        ${percentage}%
+                    </div>
+                    <h3 class="font-bold text-slate-900 text-lg">Quiz Completed</h3>
+                    <p class="text-sm text-slate-600">
+                        You answered <strong>${state.score}</strong> out of <strong>${questions.length}</strong> questions correctly.
+                    </p>
+                    <p class="text-sm font-medium text-slate-700 mt-2 italic">
+                        "${feedback}"
+                    </p>
+                    <div class="mt-4 pt-4 border-t border-slate-100 w-full">
+                        <button class="text-[#2A5EE8] text-sm font-bold flex items-center justify-center gap-2 w-full hover:text-[#1E4BB8] transition-colors" onclick="location.reload()">
+                            <i class="fa-solid fa-rotate-right"></i> Retake Quiz
+                        </button>
+                    </div>
+                </div>
+            `;
+            chatWindow.appendChild(div);
+            scrollToBottom();
+        }
+
+        function saveToGoogleForms(name, email, score) {
+            // Implementation logic preserved as comments for backend integration
+            /*
+            const formUrl = 'https://docs.google.com/forms/d/e/YOUR_FORM_ID/formResponse';
+            const formData = new URLSearchParams();
+            formData.append('entry.1234567890', name);   
+            formData.append('entry.0987654321', email);  
+            formData.append('entry.1122334455', score);  
+
+            fetch(formUrl, { method: 'POST', mode: 'no-cors', body: formData });
+            */
+        }
+
+        // ==========================================
+        // UI HELPERS
+        // ==========================================
+
+        function addBotMessage(text) {
+            const formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+            const div = document.createElement('div');
+            div.className = 'flex items-start gap-3 message-enter w-full pr-8';
+            div.innerHTML = `
+                <div class="w-8 h-8 rounded-full bg-[#2A5EE8] border border-blue-700 flex items-center justify-center text-white flex-shrink-0 shadow-md mt-1">
+                    <i class="fa-solid fa-robot text-xs"></i>
+                </div>
+                <div class="flex flex-col gap-1 w-full">
+                    <div class="bot-bubble px-4 py-3 rounded-2xl rounded-tl-sm text-[15px] border border-slate-200 leading-relaxed">
+                        ${formattedText}
+                    </div>
+                </div>
+            `;
+            chatWindow.appendChild(div);
+            scrollToBottom();
+        }
+
+        function addUserMessage(text) {
+            const div = document.createElement('div');
+            div.className = 'flex items-start gap-3 message-enter justify-end w-full pl-8';
+            div.innerHTML = `
+                <div class="flex flex-col gap-1 w-full items-end">
+                    <div class="user-bubble px-4 py-3 rounded-2xl rounded-tr-sm text-[15px] border border-[#1E4BB8] leading-relaxed">
+                        ${text}
+                    </div>
+                </div>
+                <div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-500 flex-shrink-0 shadow-inner mt-1 border border-white">
+                    <i class="fa-solid fa-user text-xs"></i>
+                </div>
+            `;
+            chatWindow.appendChild(div);
+            scrollToBottom();
+        }
+
+        function showTypingIndicator() {
+            const div = document.createElement('div');
+            div.id = 'typing-indicator';
+            div.className = 'flex items-start gap-3 message-enter w-full';
+            div.innerHTML = `
+                <div class="w-8 h-8 rounded-full bg-[#2A5EE8] border border-blue-700 flex items-center justify-center text-white flex-shrink-0 shadow-md mt-1">
+                    <i class="fa-solid fa-robot text-xs"></i>
+                </div>
+                <div class="bot-bubble px-5 py-4 rounded-2xl rounded-tl-sm border border-slate-200 flex items-center gap-1.5 h-11">
+                    <div class="w-1.5 h-1.5 rounded-full typing-dot"></div>
+                    <div class="w-1.5 h-1.5 rounded-full typing-dot"></div>
+                    <div class="w-1.5 h-1.5 rounded-full typing-dot"></div>
+                </div>
+            `;
+            chatWindow.appendChild(div);
+            scrollToBottom();
+        }
+
+        function hideTypingIndicator() {
+            const indicator = document.getElementById('typing-indicator');
+            if (indicator) indicator.remove();
+        }
+
+        function scrollToBottom() {
+            setTimeout(() => {
+                chatWindow.scrollTo({ top: chatWindow.scrollHeight, behavior: 'smooth' });
+            }, 100);
+        }
+    </script>
+</body>
+</html>
